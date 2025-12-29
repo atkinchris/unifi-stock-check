@@ -11,7 +11,8 @@ import requests
 URL = "https://uk.store.ui.com/uk/en/category/wifi-special-devices/products/utr"
 INTERVAL = 300  # seconds
 NEXT_DATA_RE = re.compile(
-    r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', re.DOTALL
+    r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
+    re.DOTALL,
 )
 
 print(f"Polling UTR every {INTERVAL} seconds. Ctrl+C to stop.")
@@ -26,7 +27,8 @@ while True:
             continue
         data = json.loads(m.group(1))
         product = data["props"]["pageProps"]["collection"]["products"][0]
-        status = product.get("status", "") or (product.get("variants") or [{}])[0].get("status", "")
+        variants = product.get("variants") or [{}]
+        status = product.get("status", "") or variants[0].get("status", "")
 
         ts = datetime.now(UTC).strftime("%H:%M:%S %Z")
         if status == "Available":
