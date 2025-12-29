@@ -66,15 +66,19 @@ def main() -> int:
         return 0 if is_available else 2
 
     print(f"Watching UTR every {interval} seconds. Ctrl+C to stop.")
-    while True:
-        try:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] ", end="")
-            is_available, status = check_once(url)
-            if is_available:
-                return 0
-        except Exception as exc:  # noqa: BLE001
-            print(f"❌ Failed to check UTR: {exc}", file=sys.stderr)
-        time.sleep(interval)
+    try:
+        while True:
+            try:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ", end="")
+                is_available, status = check_once(url)
+                if is_available:
+                    return 0
+            except Exception as exc:  # noqa: BLE001
+                print(f"❌ Failed to check UTR: {exc}", file=sys.stderr)
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        print("\nStopped by user.")
+        return 130
 
 
 if __name__ == "__main__":
