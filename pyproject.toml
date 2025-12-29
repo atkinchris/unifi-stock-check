@@ -4,4 +4,29 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["requests>=2.32.3"]
+dependencies = ["requests>=2.32.3", "ruff>=0.14.10"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "W",   # pycodestyle warnings
+  "I",   # import sorting
+  "B",   # flake8-bugbear
+  "UP",  # pyupgrade
+  "SIM", # flake8-simplify
+  "C4",  # flake8-comprehensions
+  "PL",  # pylint (selected subset)
+  "N",   # pep8-naming
+  "DTZ", # flake8-datetimez
+  "TRY", # tryceratops (better exception handling)
+  "ARG", # unused arguments
+  "RET", # flake8-return
+  "PT",  # flake8-pytest-style (harmless here, catches asserts/style)
+  "Q",   # flake8-quotes
+  "RUF", # Ruff-specific rules
+]

@@ -4,7 +4,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 
 import requests
 
@@ -21,14 +21,14 @@ while True:
         r.raise_for_status()
         m = NEXT_DATA_RE.search(r.text)
         if not m:
-            raise RuntimeError("Missing __NEXT_DATA__")
+            print("❌ Error: Missing __NEXT_DATA__", file=sys.stderr)
+            time.sleep(INTERVAL)
+            continue
         data = json.loads(m.group(1))
         product = data["props"]["pageProps"]["collection"]["products"][0]
-        status = product.get("status", "") or (product.get("variants") or [{}])[0].get(
-            "status", ""
-        )
+        status = product.get("status", "") or (product.get("variants") or [{}])[0].get("status", "")
 
-        ts = datetime.now().strftime("%H:%M:%S")
+        ts = datetime.now(UTC).strftime("%H:%M:%S %Z")
         if status == "Available":
             print(f"[{ts}] UTR is AVAILABLE \a")
             sys.exit(0)
@@ -41,5 +41,5 @@ while True:
     except KeyboardInterrupt:
         print("Stopped by user.")
         sys.exit(130)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"❌ Error: {exc}", file=sys.stderr)
